@@ -15,13 +15,13 @@
             p.nombre,
             p.fecha_nacimiento,
 
-            e.nombre as EPS_Nombre,
-            e.nit,
+            e.nombre as Eps_nombre,
+            e.nit as Eps_nit,
 
-            c.idCONSULTAS,
-            c.fecha_y_hora,
-            c.resumen,
-            c.costo
+            c.idCONSULTAS as Consulta_id,
+            c.fecha_y_hora as Consulta_fechayhora,
+            c.resumen as Consulta_resumen,
+            c.costo as Consulta_costo
 
             FROM  CM_PACIENTES as p left join CM_CONSULTAS as c on p.id=c.PACIENTES_id left join CM_EPS as e on p.eps_nit=e.nit WHERE #{idp}=p.id AND #{tipoidp}=p.tipo_id
 
@@ -45,6 +45,24 @@
 
             FROM  CM_PACIENTES as p left join CM_CONSULTAS as c on p.id=c.PACIENTES_id left join CM_EPS as e on p.eps_nit=e.nit
     </select>
+    
+    <insert id="insertarPaciente">
+        insert into CM_PACIENTES(id,tipo_id,nombre,fecha_nacimiento,EPS_nit)
+        values (#{p.id},#{p.tipoId},#{p.nombre},#{p.fechaNacimiento},#{p.eps.nit})
+    </insert>
+    
+    <insert id="insertConsulta" useGeneratedKeys="true" keyProperty="cons.id">
+        insert into CM_CONSULTAS(fecha_y_hora,resumen,costo,PACIENTES_id,PACIENTES_tipo_id)
+        values (#{cons.fechayHora},#{cons.resumen},#{costoc},#{idp},#{tipoidp})
+    </insert>
+    
+    <update id="updatePaciente">
+        update CM_PACIENTES set 
+        nombre=#{nomp},
+        fecha_nacimiento=#{fechanacimientop},
+        EPS_nit=#{epsp.nit}
+        where id =#{idp}
+    </update>
     
     <resultMap type='Paciente' id='PacienteResult'>
         <id property='id' column='id'/>
