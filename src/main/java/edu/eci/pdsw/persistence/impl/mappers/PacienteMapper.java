@@ -4,9 +4,9 @@ package edu.eci.pdsw.persistence.impl.mappers;
 
 import edu.eci.pdsw.samples.entities.Consulta;
 import edu.eci.pdsw.samples.entities.Paciente;
-import java.util.Date;
 
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 /**
  *
@@ -14,7 +14,7 @@ import java.util.List;
  */
 public interface PacienteMapper {
         
-    public Paciente loadPacienteById(int id,String tipoid);
+    public Paciente loadPacienteById(@Param("idp") int id,@Param("tipoidp") String tipoid);
     
     public List<Paciente> loadPacientes();
     
