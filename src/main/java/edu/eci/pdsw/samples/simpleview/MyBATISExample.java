@@ -5,8 +5,10 @@
  */
 package edu.eci.pdsw.samples.simpleview;
 
+import edu.eci.pdsw.persistence.impl.mappers.EpsMapper;
 import edu.eci.pdsw.persistence.impl.mappers.PacienteMapper;
 import edu.eci.pdsw.samples.entities.Consulta;
+import edu.eci.pdsw.samples.entities.Eps;
 import edu.eci.pdsw.samples.entities.Paciente;
 import java.io.IOException;
 import java.io.InputStream;
@@ -52,6 +54,7 @@ public class MyBATISExample {
         SqlSessionFactory sessionfact = getSqlSessionFactory();
         SqlSession sqlss = sessionfact.openSession();
         PacienteMapper pmapper=sqlss.getMapper(PacienteMapper.class);
+        EpsMapper emapper = sqlss.getMapper(EpsMapper.class);
 
         List<Paciente> pacientes=pmapper.loadPacientes();
         for(Paciente i:pacientes){
@@ -60,10 +63,16 @@ public class MyBATISExample {
         Paciente pruebaPaciente=pmapper.loadPacienteById(1026585441,"CC");
         System.out.println(pruebaPaciente.getNombre() + " " + pruebaPaciente.getEps().getNombre() + " " + pruebaPaciente.getConsultas().size());
         
-        Paciente diego =new Paciente(1019108883,"CC","Diego Borrero",java.sql.Date.valueOf("1995-06-14"),pacientes.get(0).getEps());
+        Paciente diego = new Paciente(1019108883,"CC","Diego Borrero",java.sql.Date.valueOf("1995-06-14"),pacientes.get(0).getEps());
 //        registrarNuevoPaciente(pmapper,diego);
         
-        actualizarPaciente(pmapper,pmapper.loadPacienteById(2109950,"CC"));
+//        actualizarPaciente(pmapper,pmapper.loadPacienteById(2109950,"CC"));
+        
+        List<Eps> epses= emapper.loadAllEPS();
+        for(Eps i: epses){
+            System.out.println(i.getNombre()+" +"+i.getNit());
+        }
+        
 //        pruebaPaciente=pmapper.loadPacienteById(1019108883,"CC");
 //        System.out.println(pruebaPaciente.getNombre() + " " + pruebaPaciente.getEps().getNombre() + " " + pruebaPaciente.getConsultas().size());
         
@@ -107,7 +116,7 @@ public class MyBATISExample {
         pmapper.updatePaciente(p.getId(), "florentina", pmapper.loadPacientes().get(0).getEps(),java.sql.Date.valueOf("2000-06-14"));
         
         for(Consulta i : p.getConsultas()){
-            if(i.getId()==0){
+            if(i.getId()==0 && i.getFechayHora()!=null){
                 pmapper.insertConsulta(i, 2109950, "CC",(int) i.getCosto());
             }
         }
